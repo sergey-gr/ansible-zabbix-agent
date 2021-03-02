@@ -1,0 +1,5 @@
+- name: Installing zabbix
+  hosts: zabbix_hosts
+  become: yes
+  roles:
+    - role: zabbix

@@ -1,0 +1,40 @@
+# ==> Adding zabbix repo
+- name: add zabbix repo
+  yum_repository:
+    name: zabbix-repo
+    description: zabbix stable repo
+    baseurl: "http://repo.zabbix.com/zabbix/{{ zabbix_version }}/rhel/{{ hostvars[inventory_hostname].ansible_distribution_major_version }}/$basearch/"
+    gpgkey: 'http://repo.zabbix.com/RPM-GPG-KEY-ZABBIX-A14FE591'
+    gpgcheck: no
+    state: present
+
+# ==> Installing zabbix packages
+- name: install zabbix packages
+  yum:
+    name: "{{ zabbix_packages }}"
+    state: latest
+
+# ==> Copy scripts
+- name: copy zabbix_agent.conf file
+  template: 
+    src: zabbix_agentd.conf
+    dest: /etc/zabbix/zabbix_agentd.conf
+    owner: root
+    group: root
+    mode: 0644
+
+# ==> Create firewall rule for zabbix-agent
+- name: open zabbix-agent port
+  firewalld:
+    zone: public
+    port: '{{ agent_port }}'
+    permanent: yes
+    immediate: yes
+    state: enabled
+
+# ==> Start zabbix-agent
+- name: start zabbix-agent
+  systemd:
+    name: zabbix-agent
+    state: started
+    enabled: yes

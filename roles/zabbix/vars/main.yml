@@ -1,0 +1,13 @@
+# https://www.zabbix.com/documentation/current/manual/installation/install_from_packages/rhel_centos
+
+# Zabbix common
+zabbix_server_ip: '10.180.1.188'
+
+# Zabbix hosts common
+zabbix_version: 5.3
+
+zabbix_packages:
+  - zabbix-sender
+  - zabbix-agent
+
+agent_port: '10050/tcp'
